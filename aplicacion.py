@@ -11,7 +11,8 @@ def crearTabla():
     with sqlite3.connect(bd) as conexion:
         cursor = conexion.cursor()
         cursor.execute(
-            "CREATE TABLE IF NOT EXISTS REGISTROS(ID INTEGER PRIMARY KEY AUTOINCREMENT, NOMBRE VARCHAR(30),  SLOGAN VARCHAR(200), DESCRIPCION TEXT,IMAGEN TEXT )")         
+            "CREATE TABLE IF NOT EXISTS REGISTROS(ID INTEGER PRIMARY KEY AUTOINCREMENT, NOMBRE VARCHAR(30),  SLOGAN VARCHAR(200), DESCRIPCION TEXT,IMAGEN TEXT )"
+        )
         conexion.commit()
 
 
@@ -38,34 +39,40 @@ def insertar():
             imagen = request.form["imagen"]
             with sqlite3.connect(bd) as conexion:
                 cursor = conexion.cursor()
-                cursor.execute("INSERT INTO REGISTROS (NOMBRE,SLOGAN,DESCRIPCION,IMAGEN) VALUES (?,?,?,?)",(nombre,slogan,descripcion,imagen,))
+                cursor.execute(
+                    "INSERT INTO REGISTROS (NOMBRE,SLOGAN,DESCRIPCION,IMAGEN) VALUES (?,?,?,?)",
+                    (
+                        nombre,
+                        slogan,
+                        descripcion,
+                        imagen,
+                    ),
+                )
                 conexion.commit()
-                
-        return redirect(url_for("index"))
+        return redirect(url_for("index", success="true"))
     except Exception as e:
-        # Aquí puedes manejar la excepción de la manera que desees
         return f"Error: {str(e)}"
 
 
-@app.route('/muestra')
+@app.route("/muestra")
 def muestra():
     with sqlite3.connect(bd) as conexion:
         cursor = conexion.cursor()
         cursor.execute("SELECT * FROM REGISTROS")
         datos = cursor.fetchall()
-    return render_template('muestra.htm', data=datos)
+    return render_template("muestra.htm", data=datos)
 
 
-@app.route('/api', methods=['GET'])
+@app.route("/api", methods=["GET"])
 def contenido_api():
     connection = sqlite3.connect(bd)
     cursor = connection.cursor()
-    cursor.execute('SELECT NOMBRE, SLOGAN, IMAGEN FROM REGISTROS')
+    cursor.execute("SELECT NOMBRE, SLOGAN, IMAGEN FROM REGISTROS")
     registros = cursor.fetchall()
     connection.close()
     datos = jsonify(registros)
-    
-    return render_template('api.html', data=datos)
+
+    return render_template("api.html", data=datos)
 
 
 if (__name__) == "__main__":

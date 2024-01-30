@@ -13,9 +13,25 @@
       href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap"
       rel="stylesheet"
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lexend+Mega:wght@700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend+Mega:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const successMessage = urlParams.get("success");
+        if (successMessage === "true") {
+          document.getElementById("alerta").style.display = "block";
+          setTimeout(function () {
+            document.getElementById("alerta").style.display = "none";
+          }, 5000);
+        }
+      });
+    </script>
+
     <title>Flask</title>
     <style>
       .admin {
@@ -58,6 +74,11 @@
       h1{
         text-shadow: 2px 2px 20px rgba(0, 0, 0, 0.5);
       }
+      #alerta{
+        color: #000000;
+        font-size: 22px;
+        text-align: center;.
+      }
     </style>
   </head>
   <body>
@@ -65,12 +86,12 @@
       <div class="container-fluid">
         <a class="navbar-brand" href="{{url_for('index')}}">ADMINISTRACIÓN</a>
         <a class="navbar-brand" href="{{url_for('muestra')}}">MUESTRA</a>
-        <a class="navbar-brand" href="{{url_for('contenido_api')}}">CONTENIDO API</a>
+        <a class="navbar-brand" href="{{url_for('contenido_api')}}"
+          >CONTENIDO API</a
+        >
       </div>
     </nav>
     <div class="container">
-      
-
       <!--Estamos llamando a rutas, no a ficheros-->
       <div class="row">
         <div class="col-2"></div>
@@ -79,7 +100,7 @@
             <h1 class="mt-4 text-center">ADMINISTRACIÓN</h1>
 
             <hr />
-            <form action="/insertar" method="POST">
+            <form action="{{ url_for('insertar') }}" method="POST">
               <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre</label>
                 <input
@@ -87,6 +108,7 @@
                   class="form-control"
                   id="nombre"
                   name="nombre"
+                  required
                 />
               </div>
               <div class="mb-3">
@@ -96,6 +118,7 @@
                   class="form-control"
                   id="slogan"
                   name="slogan"
+                  required
                 />
               </div>
               <div class="mb-3">
@@ -104,6 +127,7 @@
                   class="form-control"
                   id="descripcion"
                   name="descripcion"
+                  required
                 ></textarea>
               </div>
               <div class="mb-3">
@@ -113,11 +137,19 @@
                   class="form-control"
                   id="imagen"
                   name="imagen"
+                  required
                 />
               </div>
               <div class="mb-3 text-center">
                 <button type="reset" class="btn btn-danger">Borrar</button>
                 <button type="submit" class="btn btn-primary">Enviar</button>
+              </div>
+              <div
+                id="alerta"
+                class="alert alert-success"
+                style="display: none"
+              >
+                Formulario enviado con éxito!
               </div>
             </form>
           </div>
@@ -138,7 +170,6 @@
         {% endfor %}
       </div>
       <hr />
-     
     </div>
   </body>
 </html>
